@@ -1,0 +1,120 @@
+{% extends 'students/base.html' %}
+{% block content %}
+
+<h3 class="m-4">All Students</h3>
+<div class="row">
+  <div class="col-12">
+    {% if students %}
+    <div class="card text-white bg-dark mb-4 ms-4 me-4">
+      <div class="card-header">
+        <i class="fa-solid fa-list"></i> Student Records
+      </div>
+      <div class="card-body">
+        <p class="card-text">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">STUDENT NUMBER</th>
+                <th scope="col">FIRST NAME</th>
+                <th scope="col">LAST NAME</th>
+                <th scope="col">EMAIL</th>
+                <th scope="col">FIELD OF STUDY</th>
+                <th scope="col">GPA</th>
+                <th scope="col">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student in students %}
+              <tr class="table-dark">
+                <td>{{ student.student_number }}</td>
+                <td>{{ student.first_name }}</td>
+                <td>{{ student.last_name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.field_of_study }}</td>
+                <td>{{ student.gpa }}</td>
+                <td>
+                  <button type="button" class="btn btn-outline-info me-1" data-bs-toggle="modal" data-bs-target="#myModal{{ student.id }}">
+                    <i class="fa-regular fa-eye fa-lg"></i>
+                  </button>
+
+                  <a type="button" class="btn btn-outline-primary me-1 ms-1" href="{% url 'edit' student.id %}">
+                    <i class="fa-solid fa-pen fa-lg"></i>
+                  </a>                  
+                  
+                  <button type="button" class="btn btn-outline-danger me-1" data-bs-toggle="modal" data-bs-target="#delete{{ student.id }}">
+                    <i class="fa-solid fa-trash fa-lg"></i>
+                  </button>                  
+
+                  <!-- view student modal  -->
+
+                  <div class="modal" id="myModal{{ student.id }}" tabindex="-1" aria-labelledby="myModalLabel1"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                          <h5 class="modal-title">{{ student.first_name }} {{ student.last_name }}</h5>
+                        </div>
+                        <div class="modal-body">
+                          <ul class="list-unstyled">
+                            <li><strong>Student: </strong>{{ student.student_number }}</li>
+                            <li><strong>First Name: </strong>{{ student.first_name }}</li>
+                            <li><strong>Second Name: </strong>{{ student.last_name }}</li>
+                            <li><strong>Email: </strong>{{ student.email }}</li>
+                            <li><strong>Field of Study: </strong>{{ student.field_of_study }}</li>
+                            <li><strong>GPA: </strong>{{ student.gpa }}</li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- delete student modal -->
+
+                  <div class="modal" id="delete{{ student.id }}" tabindex="-1" aria-labelledby="myModalLabel1"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                          <h5 class="modal-title">{{ student.first_name }} {{ student.last_name }}</h5>
+                        </div>
+                        <div class="modal-body">
+                          <p>Are you sure want to delete?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <form action="{% url 'delete' student.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-outline-danger" value="Delete">
+                          </form>
+                          <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        </p>
+      </div>
+    </div>
+    {% else %}
+    <h5 class="alert alert-danger text-white ms-4 me-4"><i class="fa-solid fa-triangle-exclamation"></i> No Student Record Found!!</h5>
+    {% endif %}
+    <!-- <div class="card bg-dark border-dark mb-4 ms-4 me-4">
+                    <div class="card-header">Header</div>
+                    <div class="card-body">
+                      <h4 class="card-title">Dark card title</h4>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                  </div> -->
+  </div>
+</div>
+
+{% endblock %}
